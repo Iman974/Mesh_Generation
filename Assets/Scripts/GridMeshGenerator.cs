@@ -1,33 +1,36 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 public class GridMeshGenerator : MonoBehaviour {
 
-    [SerializeField] private GridSettings settings = new GridSettings(1f, 3);
+    [SerializeField] private GridSettings settings = new GridSettings();
 
     private Mesh mesh;
     private Vector3[] vertices;
     private int[] triangles;
 
-    private void Start () {
+    private void Awake() {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+    }
 
+    private void Start () {
         GenerateVerticesAndTris();
         UpdateMesh();
     }
 
     private void GenerateVerticesAndTris() {
-        int gridSize = settings.gridSize;
-        vertices = new Vector3[(gridSize + 1) * (gridSize + 1)];
-        triangles = new int[gridSize * gridSize * 6];
+        Vector2Int gridSize = settings.gridSize;
+        Vector2 cellSize = settings.scale / gridSize;
+
+        vertices = new Vector3[(gridSize.x + 1) * (gridSize.y + 1)];
+        triangles = new int[gridSize.x * gridSize.y * 6];
 
         int vertexIndex = 0;
-        float cellSize = settings.cellSize;
-        for (int x = 0; x < gridSize + 1; x++) {
-            for (int y = 0; y < gridSize + 1; y++) {
-                vertices[vertexIndex] = new Vector3(x * cellSize, 0f, y * cellSize);
+        for (int x = 0; x < gridSize.x + 1; x++) {
+            for (int y = 0; y < gridSize.y + 1; y++) {
+                float altitude = Mathf.SmoothStep(0f, settings.height, (float)x / gridSize.x);
+                vertices[vertexIndex] = new Vector3(x * cellSize.x, altitude, y * cellSize.y);
 
                 vertexIndex++;
             }
@@ -35,14 +38,14 @@ public class GridMeshGenerator : MonoBehaviour {
 
         vertexIndex = 0;
         int trisIndex = 0;
-        for (int x = 0; x < gridSize; x++) {
-            for (int y = 0; y < gridSize; y++) {
+        for (int x = 0; x < gridSize.x; x++) {
+            for (int y = 0; y < gridSize.y; y++) {
                 triangles[trisIndex] = vertexIndex;
                 triangles[trisIndex + 1] = vertexIndex + 1;
-                triangles[trisIndex + 2] = vertexIndex + gridSize + 2;
+                triangles[trisIndex + 2] = vertexIndex + gridSize.y + 2;
                 triangles[trisIndex + 3] = vertexIndex;
-                triangles[trisIndex + 4] = vertexIndex + gridSize + 2;
-                triangles[trisIndex + 5] = vertexIndex + gridSize + 1;
+                triangles[trisIndex + 4] = vertexIndex + gridSize.y + 2;
+                triangles[trisIndex + 5] = vertexIndex + gridSize.y + 1;
 
                 vertexIndex++;
                 trisIndex += 6;
@@ -58,14 +61,16 @@ public class GridMeshGenerator : MonoBehaviour {
         mesh.RecalculateNormals();
     }
 
-    [System.Serializable]
-    private struct GridSettings {
-        public float cellSize;
-        public int gridSize;
-
-        public GridSettings(float cellSize, int gridSize) {
-            this.cellSize = cellSize;
-            this.gridSize = gridSize;
+    private void OnGUI() {
+        if (GUI.Button(new Rect(10f, 10f, 80f, 30f), "Regenerate")) {
+            Start();
         }
+    }
+
+    [System.Serializable]
+    private class GridSettings {
+        public Vector2Int gridSize = new Vector2Int(3, 3);
+        public Vector2 scale = new Vector2(1f, 1f);
+        public float height = 2f;
     }
 }
