@@ -337,6 +337,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589898314}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 943265ff22685a94182f17e759578504, type: 3}
+  m_Script: {fileID: 11500000, guid: bc3b4333fc0b45d4da670aeff59ad217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings:
+    cellSize: 1
+    gridSize: 3
