@@ -4,7 +4,8 @@
 public class GridMeshGenerator : MonoBehaviour {
 
     [SerializeField] private GridSettings settings = new GridSettings();
-    [SerializeField] private float moveSpeed = 0.5f;
+    [SerializeField] private Vector2 moveSpeed = new Vector2(0.75f, 0.75f);
+    [SerializeField] private Vector2 noiseScale = new Vector2(0.5f, 0.5f);
 
     private Mesh mesh;
     private Vector3[] vertices;
@@ -56,8 +57,10 @@ public class GridMeshGenerator : MonoBehaviour {
 
     private void Update() {
         for (int i = 0; i < vertices.Length; i++) {
-            float noise = Mathf.PerlinNoise(vertices[i].x * Time.time * moveSpeed, vertices[i].z * Time.time * moveSpeed);
-            vertices[i] = new Vector3(vertices[i].x, noise, vertices[i].z);
+            float x = vertices[i].x;
+            float z = vertices[i].z;
+            float noise = Mathf.PerlinNoise((x * noiseScale.x) + (Time.time * moveSpeed.x), (z * noiseScale.y) + (Time.time * moveSpeed.y));
+            vertices[i] = new Vector3(x, noise, z);
         }
 
         mesh.vertices = vertices;
@@ -79,7 +82,7 @@ public class GridMeshGenerator : MonoBehaviour {
 
     [System.Serializable]
     private class GridSettings {
-        public Vector2Int gridSize = new Vector2Int(3, 3);
-        public Vector2 scale = new Vector2(1f, 1f);
+        public Vector2Int gridSize = new Vector2Int(50, 50);
+        public Vector2 scale = new Vector2(4f, 4f);
     }
 }
