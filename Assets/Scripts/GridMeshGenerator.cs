@@ -4,6 +4,7 @@
 public class GridMeshGenerator : MonoBehaviour {
 
     [SerializeField] private GridSettings settings = new GridSettings();
+    [SerializeField] private float moveSpeed = 0.5f;
 
     private Mesh mesh;
     private Vector3[] vertices;
@@ -29,8 +30,7 @@ public class GridMeshGenerator : MonoBehaviour {
         int vertexIndex = 0;
         for (int x = 0; x < gridSize.x + 1; x++) {
             for (int y = 0; y < gridSize.y + 1; y++) {
-                float altitude = Mathf.SmoothStep(0f, settings.height, (float)x / gridSize.x);
-                vertices[vertexIndex] = new Vector3(x * cellSize.x, altitude, y * cellSize.y);
+                vertices[vertexIndex] = new Vector3(x * cellSize.x, 0f, y * cellSize.y);
 
                 vertexIndex++;
             }
@@ -54,6 +54,16 @@ public class GridMeshGenerator : MonoBehaviour {
         }
     }
 
+    private void Update() {
+        for (int i = 0; i < vertices.Length; i++) {
+            float noise = Mathf.PerlinNoise(vertices[i].x * Time.time * moveSpeed, vertices[i].z * Time.time * moveSpeed);
+            vertices[i] = new Vector3(vertices[i].x, noise, vertices[i].z);
+        }
+
+        mesh.vertices = vertices;
+        mesh.RecalculateNormals();
+    }
+
     private void UpdateMesh() {
         mesh.Clear();
         mesh.vertices = vertices;
@@ -71,6 +81,5 @@ public class GridMeshGenerator : MonoBehaviour {
     private class GridSettings {
         public Vector2Int gridSize = new Vector2Int(3, 3);
         public Vector2 scale = new Vector2(1f, 1f);
-        public float height = 2f;
     }
 }
