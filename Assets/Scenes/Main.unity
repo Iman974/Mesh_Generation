@@ -337,11 +337,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589898314}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc3b4333fc0b45d4da670aeff59ad217, type: 3}
+  m_Script: {fileID: 11500000, guid: 943265ff22685a94182f17e759578504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings:
-    gridSize: {x: 50, y: 50}
-    scale: {x: 4, y: 4}
-  moveSpeed: {x: 0.75, y: 0.75}
-  noiseScale: {x: 0.5, y: 0.5}
+  meshType: {fileID: 11400000, guid: 6caab9d0d20cb234a8b65bc677410edd, type: 2}

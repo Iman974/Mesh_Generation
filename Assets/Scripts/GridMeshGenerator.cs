@@ -68,7 +68,6 @@ public class GridMeshGenerator : MonoBehaviour {
     }
 
     private void UpdateMesh() {
-        mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
@@ -82,7 +81,7 @@ public class GridMeshGenerator : MonoBehaviour {
 
     [System.Serializable]
     private class GridSettings {
-        public Vector2Int gridSize = new Vector2Int(50, 50);
+        [Min(0)] public Vector2Int gridSize = new Vector2Int(50, 50);
         public Vector2 scale = new Vector2(4f, 4f);
     }
 }
