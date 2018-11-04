@@ -3,7 +3,9 @@
 [CreateAssetMenu(menuName = "MeshTypes/Cube mesh", fileName = "New cube mesh")]
 public class CubeMesh : MeshType {
 
-    private const int VerticesCount = 24;
+    public override int CalculateVerticesCount() {
+        return 24;
+    }
 
     public override void GenerateVertices(out Vector3[] vertices) {
         vertices = new Vector3[] {

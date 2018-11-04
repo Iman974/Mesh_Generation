@@ -32,6 +32,18 @@ public struct Matrix3x3 {
         return CreateRotationY(yaw) * CreateRotationX(pitch) * CreateRotationZ(roll);
     }
 
+    public static Matrix3x3 CreateRotationYZ(float yaw, float roll) {
+        return CreateRotationY(yaw) * CreateRotationZ(roll);
+    }
+
+    public static Matrix3x3 CreateRotationYX(float yaw, float pitch) {
+        return CreateRotationY(yaw) * CreateRotationX(pitch);
+    }
+
+    public static Matrix3x3 CreateRotationXZ(float pitch, float roll) {
+        return CreateRotationX(pitch) * CreateRotationZ(roll);
+    }
+
     public static Matrix3x3 CreateRotationX(float radians) {
         float cos = Mathf.Cos(radians);
         float sin = Mathf.Sin(radians);
