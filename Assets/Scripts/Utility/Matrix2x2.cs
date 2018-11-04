@@ -14,17 +14,17 @@ public struct Matrix2x2 {
         this.c1_r1 = c1_r1;
     }
 
-    public static Matrix2x2 CreateRotation(float angle) {
-        float cosAngle = Mathf.Cos(angle);
-        float sinAngle = Mathf.Sin(angle);
+    public static Matrix2x2 CreateRotation(float radians) {
+        float cos = Mathf.Cos(radians);
+        float sin = Mathf.Sin(radians);
 
-        return new Matrix2x2(cosAngle, sinAngle, -sinAngle, cosAngle);
+        return new Matrix2x2(cos, sin, -sin, cos);
     }
 
-    public static Vector2 operator*(Matrix2x2 matrix, Vector2 vector) {
-        vector.x = (matrix.c0_r0 * vector.x) + (matrix.c1_r0 * vector.y);
-        vector.y = (matrix.c0_r1 * vector.x) + (matrix.c1_r1 * vector.y);
-
-        return vector;
+    public static Vector2 operator *(Matrix2x2 matrix, Vector2 vector) {
+        return new Vector2 {
+            x = (matrix.c0_r0 * vector.x) + (matrix.c1_r0 * vector.y),
+            y = (matrix.c0_r1 * vector.x) + (matrix.c1_r1 * vector.y)
+        };
     }
 }
