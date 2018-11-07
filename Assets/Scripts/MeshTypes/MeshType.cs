@@ -9,9 +9,12 @@ public abstract class MeshType : ScriptableObject {
 
     public void OnEnable() {
         VerticesCount = CalculateVerticesCount();
+        TrianglesCount = CalculateTrianglesCount();
     }
 
-    public abstract int CalculateVerticesCount();
+    protected abstract int CalculateVerticesCount();
+
+    protected abstract int CalculateTrianglesCount();
 
     public abstract void GenerateVertices(out Vector3[] vertices);
 

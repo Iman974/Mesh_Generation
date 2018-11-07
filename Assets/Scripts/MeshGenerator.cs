@@ -9,10 +9,10 @@ public class MeshGenerator : MonoBehaviour {
     private Vector3[] vertices;
     private int[] triangles;
 
-    private void Start () {
+    private System.Collections.IEnumerator Start () {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-
+        yield return new WaitForSeconds(2f);
         GenerateVerticesAndTris();
         UpdateMesh();
     }

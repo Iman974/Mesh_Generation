@@ -26,9 +26,9 @@ public class GridMeshGenerator : MonoBehaviour {
         Vector2 cellSize = settings.scale / gridSize;
 
         vertices = new Vector3[(gridSize.x + 1) * (gridSize.y + 1)];
-        const int verticesPerTriangle = 3;
-        const int trianglesPerQuad = 2;
-        triangles = new int[gridSize.x * gridSize.y * verticesPerTriangle * trianglesPerQuad];
+        const int vertsPerTriangle = 3;
+        const int trisPerQuad = 2;
+        triangles = new int[gridSize.x * gridSize.y * vertsPerTriangle * trisPerQuad];
 
         int vertexIndex = 0;
         for (int x = 0; x < gridSize.x + 1; x++) {

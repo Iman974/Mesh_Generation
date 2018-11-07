@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
+using Stopwatch = System.Diagnostics.Stopwatch;
 
 [CreateAssetMenu(menuName = "MeshTypes/Sphere mesh", fileName = "New sphere mesh")]
 public class SphereMesh : MeshType {
 
     [SerializeField] private LevelOfDetail LOD;
-
-    public override int CalculateVerticesCount() {
-        return (LOD.vertexPerStage * LOD.stageCount * 2) + LOD.vertexPerStage + 2;
-    }
 
     //public override void UpdateVerticesAndTrisCount() {
     //    base.UpdateVerticesAndTrisCount();
@@ -17,82 +14,74 @@ public class SphereMesh : MeshType {
     public override void GenerateVertices(out Vector3[] vertices) {
         vertices = new Vector3[VerticesCount];
 
-        const float OffsetToCenter = 0.5f;
+        const float DistanceToCenter = 0.5f;
         float sideLength = 2 * Mathf.PI / LOD.vertexPerStage;
-        Vector3 startPoint = new Vector3(OffsetToCenter, 0f, 0f);
         float roll = Mathf.PI * 0.5f / (LOD.stageCount + 1);
         float yaw = Mathf.Asin(sideLength * 0.5f) * 2f;
-        int vertexIndex = 0;
 
-        for (int stageIndex = -LOD.stageCount; stageIndex < LOD.stageCount + 1; stageIndex++) {
-            for (int i = 0; i < LOD.vertexPerStage ; i++) {
-                vertices[vertexIndex] = Matrix3x3.CreateRotationYZ(-yaw * i, roll * stageIndex) * startPoint;
-                //if (vertexIndex % LOD.vertexPerStage != 0)
-                //    Debug.DrawLine(vertices[vertexIndex - 1], vertices[vertexIndex], Color.magenta, 10f);
-                vertexIndex++;
+        vertices[vertices.Length - 2] = -Vector3.up * DistanceToCenter;
+        vertices[vertices.Length - 1] = Vector3.up * DistanceToCenter;
+        Vector3 startPoint = Matrix3x3.CreateRotationZ(roll) * vertices[vertices.Length - 2];
+
+        for (int z = 0, vertIndex = 0; z < LOD.vertexPerStage; z++) {
+            for (int y = 0; y < (LOD.stageCount * 2) + 1; y++) {
+                vertices[vertIndex] = Matrix3x3.CreateRotationYZ(-yaw * z, roll * y) * startPoint;
+                //Debug.DrawLine(vertices[vert - 1], vertices[vert], Color.magenta, 150f);
+                vertIndex++;
             }
         }
 
-        vertices[vertices.Length - 2] = -Vector3.up * OffsetToCenter;
-        vertices[vertices.Length - 1] = Vector3.up * OffsetToCenter;
     }
 
     public override void GenerateTriangles(out int[] triangles) {
         triangles = new int[CalculateTrianglesCount()];
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
+        int stageCount = LOD.stageCount * 2;
+        int vertCount = VerticesCount - 2;
 
-        int vertexIndex = 0;
-        int trisIndex = 0;
-        for (int stageIndex = 0; stageIndex < LOD.stageCount * 2; stageIndex++) {
-            for (int i = 0; i < LOD.vertexPerStage - 1; i++) {
-                triangles[trisIndex] = vertexIndex;
-                triangles[trisIndex + 1] = vertexIndex + LOD.vertexPerStage;
-                triangles[trisIndex + 4] = vertexIndex;
-                vertexIndex++;
-                triangles[trisIndex + 2] = vertexIndex + LOD.vertexPerStage;
-                triangles[trisIndex + 3] = vertexIndex;
-                triangles[trisIndex + 5] = vertexIndex + LOD.vertexPerStage;
+        //int[] pattern = new[] { vert };
+        //for (int i = 0, previousVertex = 0; i < triangles.Length; i++) {
+        //    triangles[i] = previousVertex + pattern[(int)Mathf.Repeat(i, 6)];
+        //    previousVertex = triangles[i];
+        //}
+
+        for (int i = 0, vertIndex = 0, trisIndex = 0; i < LOD.vertexPerStage; i++) {
+            triangles[trisIndex] = VerticesCount - 2;
+            triangles[trisIndex + 1] = vertIndex;
+            triangles[trisIndex + 2] = (int)Mathf.Repeat(vertIndex + stageCount + 1, vertCount);
+            trisIndex += 3;
+
+            for (int y = 0; y < stageCount; y++) {
+                triangles[trisIndex] = vertIndex;
+                triangles[trisIndex + 1] = vertIndex + 1;
+                triangles[trisIndex + 2] = (int)Mathf.Repeat(vertIndex + stageCount + 2, vertCount);
+                triangles[trisIndex + 3] = vertIndex;
+                triangles[trisIndex + 4] = (int)Mathf.Repeat(vertIndex + stageCount + 2, vertCount);
+                triangles[trisIndex + 5] = (int)Mathf.Repeat(vertIndex + stageCount + 1, vertCount);
+                vertIndex++;
                 trisIndex += 6;
             }
-            triangles[trisIndex] = vertexIndex;
-            triangles[trisIndex + 1] = vertexIndex + LOD.vertexPerStage;
-            triangles[trisIndex + 4] = vertexIndex;
-            vertexIndex++;
-            triangles[trisIndex + 2] = vertexIndex;
-            triangles[trisIndex + 3] = vertexIndex - LOD.vertexPerStage;
-            triangles[trisIndex + 5] = vertexIndex;
-            trisIndex += 6;
-        }
 
-        for (int i = 0; i < LOD.vertexPerStage - 1; i++) {
-            triangles[trisIndex] = vertexIndex;
+            triangles[trisIndex] = vertIndex;
             triangles[trisIndex + 1] = VerticesCount - 1;
-            vertexIndex++;
-            triangles[trisIndex + 2] = vertexIndex;
+            triangles[trisIndex + 2] = (int)Mathf.Repeat(vertIndex + stageCount + 1, vertCount);
             trisIndex += 3;
+            vertIndex++;
         }
-        triangles[trisIndex] = vertexIndex;
-        triangles[trisIndex + 1] = VerticesCount - 1;
-        vertexIndex++;
-        triangles[trisIndex + 2] = vertexIndex - LOD.vertexPerStage;
-        trisIndex += 3;
-
-        for (int i = 0; i < LOD.vertexPerStage - 1; i++) {
-            triangles[trisIndex] = VerticesCount - 2;
-            triangles[trisIndex + 1] = i;
-            triangles[trisIndex + 2] = i + 1;
-            trisIndex += 3;
-        }
-        triangles[trisIndex] = VerticesCount - 2;
-        triangles[trisIndex + 1] = LOD.vertexPerStage - 1;
-        triangles[trisIndex + 2] = 0;
+        sw.Stop();
+        Debug.Log(sw.Elapsed);
     }
 
-    private int CalculateTrianglesCount() {
-        const int verticesPerTriangle = 3;
-        const int trianglesPerQuad = 2;
+    protected override int CalculateTrianglesCount() {
+        const int vertsPerTriangle = 3;
+        const int trisPerQuad = 2;
 
-        return ((LOD.stageCount * 4 * LOD.vertexPerStage) + (2 * LOD.vertexPerStage)) *
-            verticesPerTriangle * trianglesPerQuad;
+        return ((LOD.stageCount * 2) + 2) * LOD.vertexPerStage * vertsPerTriangle * trisPerQuad;
+    }
+
+    protected override int CalculateVerticesCount() {
+        return (((LOD.stageCount * 2) + 1) * LOD.vertexPerStage) + 2;
     }
 
     [System.Serializable]

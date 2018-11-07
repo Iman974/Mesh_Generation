@@ -15,6 +15,7 @@ public class MeshTypeEditor : Editor {
         if (meshType == null) {
             return;
         }
-        EditorGUILayout.LabelField("Vertices: " + meshType.VerticesCount);
+
+        EditorGUILayout.LabelField("Vertices: " + meshType.VerticesCount + ", Triangles: " + meshType.TrianglesCount);
     }
 }
