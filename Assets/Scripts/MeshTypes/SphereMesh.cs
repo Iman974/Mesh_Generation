@@ -6,11 +6,6 @@ public class SphereMesh : MeshType {
 
     [SerializeField] private LevelOfDetail LOD;
 
-    //public override void UpdateVerticesAndTrisCount() {
-    //    base.UpdateVerticesAndTrisCount();
-    //    // TODO
-    //}
-
     public override void GenerateVertices(out Vector3[] vertices) {
         vertices = new Vector3[VerticesCount];
 
@@ -40,10 +35,11 @@ public class SphereMesh : MeshType {
         int stageCount = LOD.stageCount * 2;
         int vertCount = VerticesCount - 2;
 
-        //int[] pattern = new[] { vert };
-        //for (int i = 0, previousVertex = 0; i < triangles.Length; i++) {
-        //    triangles[i] = previousVertex + pattern[(int)Mathf.Repeat(i, 6)];
-        //    previousVertex = triangles[i];
+        //int[] pattern = new[] { 0, 1, stageCount + 2, 0, stageCount + 2, stageCount + 1 };
+        //for (int i = 0, vertIndex = 0; i < triangles.Length; i++) {
+
+        //    triangles[i] = (int)Mathf.Repeat(vertIndex + pattern[(int)Mathf.Repeat(i, 6)], vertCount);
+        //    vertIndex += ((i + 1) % 6) == 0 ? 1 : 0;
         //}
 
         for (int i = 0, vertIndex = 0, trisIndex = 0; i < LOD.vertexPerStage; i++) {

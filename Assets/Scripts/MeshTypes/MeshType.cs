@@ -5,9 +5,11 @@ public abstract class MeshType : ScriptableObject {
     public int VerticesCount { get; private set; }
     public int TrianglesCount { get; protected set; }
 
-    //public virtual void UpdateVerticesAndTrisCount() { }
+    private void OnEnable() {
+        UpdateVerticesAndTrisCount();
+    }
 
-    public void OnEnable() {
+    public void UpdateVerticesAndTrisCount() {
         VerticesCount = CalculateVerticesCount();
         TrianglesCount = CalculateTrianglesCount();
     }

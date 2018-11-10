@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Name: Sphere
   m_EditorClassIdentifier: 
   LOD:
-    vertexPerStage: 10
-    stageCount: 2
+    vertexPerStage: 20
+    stageCount: 5
