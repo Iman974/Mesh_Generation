@@ -12,7 +12,7 @@ public class MeshGenerator : MonoBehaviour {
     private System.Collections.IEnumerator Start () {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         GenerateVerticesAndTris();
         UpdateMesh();
     }

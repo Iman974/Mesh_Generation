@@ -61,12 +61,20 @@ public class GridMeshGenerator : MonoBehaviour {
         for (int i = 0; i < vertices.Length; i++) {
             float x = vertices[i].x;
             float z = vertices[i].z;
-            float noise = Mathf.PerlinNoise((x * noiseScale.x) + (Time.time * moveSpeed.x), (z * noiseScale.y) + (Time.time * moveSpeed.y));
-            vertices[i] = new Vector3(x, noise, z);
+            vertices[i] = new Vector3(x, CalculateNoise(x, z), z);
         }
 
         mesh.vertices = vertices;
         mesh.RecalculateNormals();
+    }
+
+    private float CalculateNoise(float x, float y) {
+        Vector2 speed = moveSpeed * Time.time;
+        x *= noiseScale.x;
+        y *= noiseScale.y;
+        float noise1 = Mathf.PerlinNoise(x + speed.x, y + speed.y);
+        float noise2 = Mathf.PerlinNoise(x - speed.x, y - speed.y);
+        return Mathf.Max(noise1, noise2);
     }
 
     private void UpdateMesh() {
