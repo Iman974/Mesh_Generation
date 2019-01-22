@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44761008, g: 0.49758154, b: 0.5753595, a: 1}
+  m_IndirectSpecularColor: {r: 0.44858348, g: 0.49486643, b: 0.55541223, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -140,7 +140,7 @@ Light:
   serializedVersion: 8
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.8
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -174,13 +174,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170076733}
-  m_LocalRotation: {x: 0.32967126, y: 0.5150119, z: -0.22370383, w: 0.75897056}
+  m_LocalRotation: {x: 0.17692707, y: -0.13756667, z: -0.09456709, w: 0.9699636}
   m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 46.957, y: 68.319, z: 0}
+  m_LocalEulerAnglesHint: {x: 18.494001, y: -18.463001, z: -14.168}
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,13 +247,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.35836798, y: 0, z: 0, w: 0.93358046}
-  m_LocalPosition: {x: 0, y: 3, z: -1.5}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 42, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1589898314
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 1589898315}
   - component: {fileID: 1589898318}
   m_Layer: 0
-  m_Name: Mesh Generator
+  m_Name: Grid Mesh Generator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -290,7 +290,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 4e7a03e300f01d34d88e413c3517112c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -341,7 +341,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589898314}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 943265ff22685a94182f17e759578504, type: 3}
+  m_Script: {fileID: 11500000, guid: bc3b4333fc0b45d4da670aeff59ad217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshType: {fileID: 11400000, guid: 6caab9d0d20cb234a8b65bc677410edd, type: 2}
+  gridSize: {x: 10, y: 10}
+  scale: {x: 4, y: 6}

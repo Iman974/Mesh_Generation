@@ -3,9 +3,8 @@
 [RequireComponent(typeof(MeshFilter))]
 public class GridMeshGenerator : MonoBehaviour {
 
-    [SerializeField] private GridSettings settings = new GridSettings();
-    [SerializeField] private Vector2 moveSpeed = new Vector2(0.75f, 0.75f);
-    [SerializeField] private Vector2 noiseScale = new Vector2(0.5f, 0.5f);
+    [SerializeField] [Min(0)] private Vector2Int gridSize = new Vector2Int(50, 50);
+    [SerializeField] private Vector2 scale = new Vector2(4f, 4f);
 
     private Mesh mesh;
     private Vector3[] vertices;
@@ -22,59 +21,49 @@ public class GridMeshGenerator : MonoBehaviour {
     }
 
     private void GenerateVerticesAndTris() {
-        Vector2Int gridSize = settings.gridSize;
-        Vector2 cellSize = settings.scale / gridSize;
+        Vector2 cellSize = scale / gridSize;
 
         vertices = new Vector3[(gridSize.x + 1) * (gridSize.y + 1)];
         const int vertsPerTriangle = 3;
         const int trisPerQuad = 2;
         triangles = new int[gridSize.x * gridSize.y * vertsPerTriangle * trisPerQuad];
 
-        int vertexIndex = 0;
+        int vertIndex = 0;
         for (int x = 0; x < gridSize.x + 1; x++) {
             for (int y = 0; y < gridSize.y + 1; y++) {
-                vertices[vertexIndex] = new Vector3(x * cellSize.x, 0f, y * cellSize.y);
+                vertices[vertIndex] = new Vector3(x * cellSize.x, y * cellSize.y, 0f);
 
-                vertexIndex++;
+                vertIndex++;
             }
         }
 
-        vertexIndex = 0;
+        vertIndex = 0;
         int trisIndex = 0;
         for (int x = 0; x < gridSize.x; x++) {
             for (int y = 0; y < gridSize.y; y++) {
-                triangles[trisIndex] = vertexIndex;
-                triangles[trisIndex + 1] = vertexIndex + 1;
-                triangles[trisIndex + 2] = vertexIndex + gridSize.y + 2;
-                triangles[trisIndex + 3] = vertexIndex;
-                triangles[trisIndex + 4] = vertexIndex + gridSize.y + 2;
-                triangles[trisIndex + 5] = vertexIndex + gridSize.y + 1;
+                triangles[trisIndex] = vertIndex;
+                triangles[trisIndex + 1] = vertIndex + 1;
+                triangles[trisIndex + 2] = vertIndex + gridSize.y + 2;
+                triangles[trisIndex + 3] = vertIndex;
+                triangles[trisIndex + 4] = vertIndex + gridSize.y + 2;
+                triangles[trisIndex + 5] = vertIndex + gridSize.y + 1;
 
-                vertexIndex++;
+                vertIndex++;
                 trisIndex += 6;
             }
-            vertexIndex++;
+            vertIndex++;
         }
     }
 
     private void Update() {
-        for (int i = 0; i < vertices.Length; i++) {
-            float x = vertices[i].x;
-            float z = vertices[i].z;
-            vertices[i] = new Vector3(x, CalculateNoise(x, z), z);
-        }
+        //for (int i = 0; i < vertices.Length; i++) {
+        //    float x = vertices[i].x;
+        //    float z = vertices[i].z;
+        //    vertices[i] = new Vector3(x, 0f, z);
+        //}
 
-        mesh.vertices = vertices;
-        mesh.RecalculateNormals();
-    }
-
-    private float CalculateNoise(float x, float y) {
-        Vector2 speed = moveSpeed * Time.time;
-        x *= noiseScale.x;
-        y *= noiseScale.y;
-        float noise1 = Mathf.PerlinNoise(x + speed.x, y + speed.y);
-        float noise2 = Mathf.PerlinNoise(x - speed.x, y - speed.y);
-        return Mathf.Max(noise1, noise2);
+        //mesh.vertices = vertices;
+        //mesh.RecalculateNormals();
     }
 
     private void UpdateMesh() {
@@ -87,11 +76,5 @@ public class GridMeshGenerator : MonoBehaviour {
         if (GUI.Button(new Rect(10f, 10f, 80f, 30f), "Regenerate")) {
             Start();
         }
-    }
-
-    [System.Serializable]
-    private class GridSettings {
-        [Min(0)] public Vector2Int gridSize = new Vector2Int(50, 50);
-        public Vector2 scale = new Vector2(4f, 4f);
     }
 }
