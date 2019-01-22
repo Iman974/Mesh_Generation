@@ -28,8 +28,32 @@ public struct Matrix3x3 {
     /// <summary>
     /// Creates a rotation matrix that rotates a vector around Z, then X and finally Y axis.
     /// </summary>
-    public static Matrix3x3 CreateRotation(float yaw, float pitch, float roll) {
+    public static Matrix3x3 CreateRotationZXY(float yaw, float pitch, float roll) {
         return CreateRotationY(yaw) * CreateRotationX(pitch) * CreateRotationZ(roll);
+    }
+
+    public static Matrix3x3 CreateRotationZXY(Vector3 radians) {
+        return CreateRotationY(radians.y) * CreateRotationX(radians.x) * CreateRotationZ(radians.z);
+    }
+
+    public static Matrix3x3 CreateRotationZYX(float roll, float yaw, float pitch) {
+        Vector3 cos = new Vector3(Mathf.Cos(pitch), Mathf.Cos(yaw), Mathf.Cos(roll));
+        Vector3 sin = new Vector3(Mathf.Sin(pitch), Mathf.Sin(yaw), Mathf.Sin(roll));
+
+        return new Matrix3x3(cos.y * cos.z, (cos.x * sin.z) + (sin.x * sin.y * cos.z),
+            (sin.x * sin.z) - (cos.x * sin.y * cos.z), -sin.z * cos.y,
+            (cos.x * cos.z) - (sin.x * sin.y * sin.z), (sin.x * cos.z) + (cos.x * sin.y * sin.z),
+            sin.y, -cos.y * sin.x, cos.x * cos.y);
+    }
+
+    public static Matrix3x3 CreateRotationZYX(Vector3 radians) {
+        Vector3 cos = new Vector3(Mathf.Cos(radians.x), Mathf.Cos(radians.y), Mathf.Cos(radians.z));
+        Vector3 sin = new Vector3(Mathf.Sin(radians.x), Mathf.Sin(radians.y), Mathf.Sin(radians.z));
+
+        return new Matrix3x3(cos.y * cos.z, (cos.x * sin.z) + (sin.x * sin.y * cos.z),
+            (sin.x * sin.z) - (cos.x * sin.y * cos.z), -sin.z * cos.y,
+            (cos.x * cos.z) - (sin.x * sin.y * sin.z), (sin.x * cos.z) + (cos.x * sin.y * sin.z),
+            sin.y, -cos.y * sin.x, cos.x * cos.y);
     }
 
     public static Matrix3x3 CreateRotationYZ(float yaw, float roll) {
