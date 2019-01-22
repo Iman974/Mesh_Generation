@@ -4,7 +4,7 @@ using Stopwatch = System.Diagnostics.Stopwatch;
 [CreateAssetMenu(menuName = "MeshTypes/Sphere mesh", fileName = "New sphere mesh")]
 public class SphereMesh : MeshType {
 
-    [SerializeField] private LevelOfDetail LOD;
+    [SerializeField] private LevelOfDetail LOD = new LevelOfDetail();
 
     public override void GenerateVertices(out Vector3[] vertices) {
         vertices = new Vector3[VerticesCount];
@@ -87,5 +87,10 @@ public class SphereMesh : MeshType {
         //public AnimationCurve stagesDivision = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
         private const int MinPolygonSideCount = 3;
+
+        public LevelOfDetail(int vertexPerStage, int stageCount) {
+            this.vertexPerStage = vertexPerStage;
+            this.stageCount = stageCount;
+        }
     }
 }

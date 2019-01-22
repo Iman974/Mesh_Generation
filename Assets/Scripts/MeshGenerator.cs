@@ -3,7 +3,7 @@
 [RequireComponent(typeof(MeshFilter))]
 public class MeshGenerator : MonoBehaviour {
 
-    [SerializeField] private MeshType meshType;
+    [SerializeField] private MeshType meshType = null;
 
     private Mesh mesh;
     private Vector3[] vertices;

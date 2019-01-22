@@ -3,7 +3,7 @@
 public class MovingGroundGenerator : MonoBehaviour {
 
     [SerializeField] private int gridSize = 3;
-    [SerializeField] private GameObject solid;
+    [SerializeField] private GameObject solid = null;
     [SerializeField] private float moveSpeed = 0.5f;
 
     private Transform[] solidTransforms;
