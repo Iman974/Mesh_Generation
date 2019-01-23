@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class Transformation : MonoBehaviour {
+public interface ITransformation {
 
-    public abstract Vector3 Apply(Vector3 point);
+    Matrix4x4 Matrix { get; }
 }

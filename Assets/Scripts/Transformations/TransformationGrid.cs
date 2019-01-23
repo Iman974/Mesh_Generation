@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using TransformationList = System.Collections.Generic.List<Transformation>;
+using TransformationList = System.Collections.Generic.List<ITransformation>;
 
 public class TransformationGrid : MonoBehaviour {
 
@@ -8,6 +8,7 @@ public class TransformationGrid : MonoBehaviour {
 
     private Transform[] grid;
     private TransformationList transformations = new TransformationList();
+    private Matrix4x4 fullTransformation;
 
     private void Start() {
         grid = new Transform[gridSize.x * gridSize.y * gridSize.z];
@@ -34,7 +35,7 @@ public class TransformationGrid : MonoBehaviour {
     }
 
     private void Update() {
-        GetComponents(transformations);
+        UpdateMatrix();
         for (int x = 0, i = 0; x < gridSize.x; x++) {
             for (int y = 0; y < gridSize.y; y++) {
                 for (int z = 0; z < gridSize.z; z++, i++) {
@@ -44,11 +45,20 @@ public class TransformationGrid : MonoBehaviour {
         }
     }
 
+    private void UpdateMatrix() {
+        GetComponents(transformations);
+        if (transformations.Count == 0) {
+            return;
+        }
+
+        fullTransformation = transformations[0].Matrix;
+        for (int i = 1; i < transformations.Count; i++) {
+            fullTransformation = transformations[i].Matrix * fullTransformation;
+        }
+    }
+
     private Vector3 TransformPoint(float x, float y, float z) {
         Vector3 worldPosition = GetWorldPosition(x, y, z);
-        for (int i = 0; i < transformations.Count; i++) {
-            worldPosition = transformations[i].Apply(worldPosition);
-        }
-        return worldPosition;
+        return fullTransformation.MultiplyPoint(worldPosition);
     }
 }
